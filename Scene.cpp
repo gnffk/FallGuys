@@ -41,8 +41,8 @@ void CScene::Initialize()
 	m_Character->SetVao_right_arm(rl_vao.first, rl_vao.second);
 
 	
-
-	cameraPos = glm::vec3{ 0.f, 2.f, 5.f };
+	cameraRot.x = 0.f, cameraRot.y = 2.f, cameraRot.z = 5.f;
+	cameraPos = glm::vec3{ cameraRot.x, cameraRot.y, cameraRot.z };
 	cameraLook = glm::vec3{ 0.f };
 
 	lightPos = glm::vec3{ 5.f, 5.f, 0.f };
@@ -53,6 +53,9 @@ void CScene::Initialize()
 
 void CScene::Update(float ElapsedTime)
 {
+	// 카메라
+	cameraPos = glm::vec3{ cameraRot.x, cameraRot.y, cameraRot.z };
+
 	glm::mat4 cameraMat = glm::lookAt(cameraPos, cameraLook, glm::vec3{ 0.f, 1.f, 0.f });
 	glm::mat4 projectMat = glm::perspective(glm::radians(45.f), (float)w_width / (float)w_height, 0.1f, 50.f);
 
@@ -131,6 +134,23 @@ void CScene::KeyboardEvent(int state, unsigned char key)
 	switch (state) {
 	case GLUT_DOWN:
 		switch (key) {
+		case 'a':
+			cameraRot.x += 1.f;
+			break;
+		case 's':
+			cameraRot.y += 1.f;
+			break;
+		case 'd':
+			cameraRot.z += 1.f;
+		case 'q':
+			cameraRot.x -= 1.f;
+			break;
+		case 'w':
+			cameraRot.y -= 1.f;
+			break;
+		case 'e':
+			cameraRot.z -= 1.f;
+			break;
 		default:
 			break;
 		}
@@ -169,8 +189,8 @@ std::pair<GLuint, GLsizei> CScene::InitCube(GLuint shader)
 	glBindVertexArray(VAO);
 	glGenBuffers(1, &VBO);
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);	// VBO를 정점버퍼로 설정 및 바인딩
-
-	std::vector<glm::vec3> data = ReadObjWithRColorNormal("./Resources/left_leg.obj");
+	glm::vec3 fixedColor = { 0.0f, 0.0f, 0.0f }; // 흰색
+	std::vector<glm::vec3> data = ReadObjWithRColorNormal("./Resources/left_leg.obj", fixedColor);
 
 	glBufferData(GL_ARRAY_BUFFER, data.size() * sizeof(glm::vec3), data.data(), GL_STATIC_DRAW);	// VBO(GPU)로 정점 데이터 복사
 
@@ -199,7 +219,8 @@ std::pair<GLuint, GLsizei> CScene::InitFace(GLuint shader)
 	glGenBuffers(1, &VBO);
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);	// VBO를 정점버퍼로 설정 및 바인딩
 
-	std::vector<glm::vec3> data = ReadObjWithRColorNormal("./Resources/face.obj");
+	glm::vec3 fixedColor = { 1.0f, 1.0f, 1.0f }; // 흰색
+	std::vector<glm::vec3> data = ReadObjWithRColorNormal("./Resources/face.obj", fixedColor);
 
 	glBufferData(GL_ARRAY_BUFFER, data.size() * sizeof(glm::vec3), data.data(), GL_STATIC_DRAW);	// VBO(GPU)로 정점 데이터 복사
 
@@ -228,7 +249,8 @@ std::pair<GLuint, GLsizei> CScene::InitBody(GLuint shader)
 	glGenBuffers(1, &VBO);
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);	// VBO를 정점버퍼로 설정 및 바인딩
 
-	std::vector<glm::vec3> data = ReadObjWithRColorNormal("./Resources/body.obj");
+	glm::vec3 fixedColor = { 1.0f, 0.6f, 0.6f }; // 분홍색
+	std::vector<glm::vec3> data = ReadObjWithRColorNormal("./Resources/body.obj", fixedColor);
 
 	glBufferData(GL_ARRAY_BUFFER, data.size() * sizeof(glm::vec3), data.data(), GL_STATIC_DRAW);	// VBO(GPU)로 정점 데이터 복사
 
@@ -257,7 +279,8 @@ std::pair<GLuint, GLsizei> CScene::InitLeft_arm(GLuint shader)
 	glGenBuffers(1, &VBO);
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);	// VBO를 정점버퍼로 설정 및 바인딩
 
-	std::vector<glm::vec3> data = ReadObjWithRColorNormal("./Resources/left_arm.obj");
+	glm::vec3 fixedColor = { 1.0f, 0.6f, 0.6f }; // 분홍색
+	std::vector<glm::vec3> data = ReadObjWithRColorNormal("./Resources/left_arm.obj", fixedColor);
 
 	glBufferData(GL_ARRAY_BUFFER, data.size() * sizeof(glm::vec3), data.data(), GL_STATIC_DRAW);	// VBO(GPU)로 정점 데이터 복사
 
@@ -286,7 +309,8 @@ std::pair<GLuint, GLsizei> CScene::InitRight_arm(GLuint shader)
 	glGenBuffers(1, &VBO);
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);	// VBO를 정점버퍼로 설정 및 바인딩
 
-	std::vector<glm::vec3> data = ReadObjWithRColorNormal("./Resources/right_arm.obj");
+	glm::vec3 fixedColor = { 1.0f, 0.6f, 0.6f }; // 분홍색
+	std::vector<glm::vec3> data = ReadObjWithRColorNormal("./Resources/right_arm.obj", fixedColor);
 
 	glBufferData(GL_ARRAY_BUFFER, data.size() * sizeof(glm::vec3), data.data(), GL_STATIC_DRAW);	// VBO(GPU)로 정점 데이터 복사
 
@@ -315,7 +339,8 @@ std::pair<GLuint, GLsizei> CScene::Initleft_leg(GLuint shader)
 	glGenBuffers(1, &VBO);
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);	// VBO를 정점버퍼로 설정 및 바인딩
 
-	std::vector<glm::vec3> data = ReadObjWithRColorNormal("./Resources/left_leg.obj");
+	glm::vec3 fixedColor = { 1.0f, 0.6f, 0.6f }; // 분홍색
+	std::vector<glm::vec3> data = ReadObjWithRColorNormal("./Resources/left_leg.obj", fixedColor);
 
 	glBufferData(GL_ARRAY_BUFFER, data.size() * sizeof(glm::vec3), data.data(), GL_STATIC_DRAW);	// VBO(GPU)로 정점 데이터 복사
 
@@ -344,7 +369,8 @@ std::pair<GLuint, GLsizei> CScene::InitRight_leg(GLuint shader)
 	glGenBuffers(1, &VBO);
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);	// VBO를 정점버퍼로 설정 및 바인딩
 
-	std::vector<glm::vec3> data = ReadObjWithRColorNormal("./Resources/right_leg.obj");
+	glm::vec3 fixedColor = { 1.0f, 0.6f, 0.6f }; // 분홍색
+	std::vector<glm::vec3> data = ReadObjWithRColorNormal("./Resources/right_leg.obj", fixedColor);
 
 	glBufferData(GL_ARRAY_BUFFER, data.size() * sizeof(glm::vec3), data.data(), GL_STATIC_DRAW);	// VBO(GPU)로 정점 데이터 복사
 

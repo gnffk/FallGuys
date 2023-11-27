@@ -6,15 +6,18 @@ class CScene
 private:
 	int& w_width;
 	int& w_height;
-
+	//객체
 	CGameObject* m_Cube;
 	CCharacter* m_Character;
-
+	// 카메라
 	glm::vec3 cameraPos;
 	glm::vec3 cameraLook;
-
+	glm::vec3 cameraRot;
+	//조명
 	glm::vec3 lightPos;
 	glm::vec3 lightColor;
+
+
 
 public:
 	CScene(int& width, int& height);

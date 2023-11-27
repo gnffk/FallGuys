@@ -13,6 +13,7 @@ CCharacter::CCharacter()
 
 CCharacter::~CCharacter()
 {
+
 }
 
 void CCharacter::Render()
@@ -30,12 +31,17 @@ void CCharacter::Update(float ElapsedTime)
 	auto final_tr = glm::translate(glm::mat4(1.f), m_pos);
 	glm::mat4 tr;
 	glm::mat4 sc;
+	glm::mat4 rot;
 
-	tr = glm::translate(glm::mat4(1.f), glm::vec3(0.f, 0.5f, 0.f));
-	sc = glm::scale(glm::mat4(1.f), glm::vec3(1.f, 0.3f, 1.f));
-	face->SetModelMat(final_tr * sc * tr);
-
+	rot = glm::rotate(glm::mat4(1.f), glm::radians(45.f), glm::vec3(0.f, 0.f, 1.f));
+	tr = glm::translate(glm::mat4(1.f), glm::vec3(-0.1f, 0.f, 1.4f));
+	//sc = glm::scale(glm::mat4(1.f), glm::vec3(1.f, 0.3f, 1.f));
+	face->SetModelMat(final_tr  * tr);
 	
+
+
+
+	face->Update(ElapsedTime);
 }
 
 
@@ -61,25 +67,21 @@ void CCharacter::SetVao_body(GLuint vao, int vertexCount)
 
 void CCharacter::SetVao_left_arm(GLuint vao, int vertexCount)
 {
-	
 	left_arm->SetVao(vao, vertexCount);
 }
 
 void CCharacter::SetVao_right_arm(GLuint vao, int vertexCount)
 {
-	
 	right_arm->SetVao(vao, vertexCount);
 }
 
 void CCharacter::SetVao_left_leg(GLuint vao, int vertexCount)
 {
-
 	left_leg->SetVao(vao, vertexCount);
 }
 
 void CCharacter::SetVao_right_leg(GLuint vao, int vertexCount)
 {
-
 	right_leg->SetVao(vao, vertexCount);
 }
 
@@ -134,5 +136,3 @@ void CCharacter::SetLightColor(glm::vec3 lightColor)
 	left_leg->SetLightColor(lightColor);
 	right_leg->SetLightColor(lightColor);
 }
-
-

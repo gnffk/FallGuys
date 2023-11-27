@@ -13,4 +13,4 @@
 std::string ReadFile(std::string fileName);
 GLuint CreateShaderProgram(std::string vertexFile, std::string fragmentFile);
 GLuint CompileShader(std::string fileName, GLenum shaderType);
-std::vector<glm::vec3> ReadObjWithRColorNormal(std::string fileName);
+std::vector<glm::vec3> ReadObjWithRColorNormal(std::string fileName, glm::vec3 fixedColor);

@@ -2,7 +2,7 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
-
+#include<string>
 std::string ReadFile(std::string fileName)
 {
 	std::ifstream in{ fileName };
@@ -90,7 +90,7 @@ GLuint CompileShader(std::string fileName, GLenum shaderType)
 	return ShaderObj;
 }
 
-std::vector<glm::vec3> ReadObjWithRColorNormal(std::string fileName)
+std::vector<glm::vec3> ReadObjWithRColorNormal(std::string fileName, glm::vec3 fixedColor)
 {
 	std::ifstream in{ fileName };
 	if (!in) {
@@ -117,7 +117,8 @@ std::vector<glm::vec3> ReadObjWithRColorNormal(std::string fileName)
 				v[i] = std::stof(substr);
 			}
 			vertex.push_back(v);
-			color.push_back({ rand() / (float)RAND_MAX, rand() / (float)RAND_MAX , rand() / (float)RAND_MAX });
+			color.push_back(fixedColor);  // 랜덤 색상 대신 지정된 색상 사용
+
 		}
 		else if (str == "vn") {
 			glm::vec3 n;
